@@ -1,29 +1,4 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*.class
-
-# Virtual Environment
-.venv/
-venv/
-ENV/
-
-# Datasets (Massive files)
-preprocessed_faces/
-dfdc_raw/
-ff_data/
-ff_data.tar
-datasets/
-test_inputs/*.png
-test_inputs/*.jpg
-
-# Models (Heavy binary files)
-saved_models/*.pth
-saved_models/*.bak
-
-# Logs
-*.log
-*.txt
-
-# OS files
+node_modules/
+dist/
+.env*
 .DS_Store
