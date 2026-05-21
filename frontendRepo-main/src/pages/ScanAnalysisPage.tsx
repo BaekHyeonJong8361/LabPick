@@ -526,7 +526,7 @@ export default function ScanAnalysisPage() {
             <div>
               <h1 className={s.resultsTitle}>Analysis Report</h1>
               <p className={s.resultsSubtitle}>
-                {targetName} &bull; {result?.xai_heatmap_url ? 'XAI heatmap available' : 'Analyzed report'}
+                {targetName} • {result?.engine_label || "Standard Engine"} • {result?.xai_heatmap_url ? "XAI forensic evidence available" : "Analyzed report"}
               </p>
             </div>
             <button className={s.newAnalysisBtn} onClick={resetAnalysis}>

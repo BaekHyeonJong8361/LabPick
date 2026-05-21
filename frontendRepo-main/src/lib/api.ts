@@ -62,7 +62,7 @@ export type UserProfile = {
   raw: unknown;
 };
 
-export type VideoAnalysisType = 'DEEPFAKE' | 'T2V';
+export type VideoAnalysisType = 'DEEPFAKE' | 'T2V' | 'RYZE' | 'LEE_SIN' | 'SHEN' | 'RAMMUS';
 
 export type PresignedUploadResponse = {
   uploadUrl: string;
@@ -84,7 +84,7 @@ export type AnalysisResult = {
   suspicious_frames: SuspiciousFrame[];
   xai_heatmap_url?: string;
   per_frame_probs?: number[];
-  analysis_type?: string;
+  analysis_type?: string; engine_label?: string;
   original_face_url?: string;
   rgb_contribution?: number;
   freq_contribution?: number;
@@ -345,7 +345,7 @@ function normalizeAnalysisResult(raw: unknown): AnalysisResult {
       readString(heatmaps?.v7) ??
       readString(t2vFirstHeatmap?.overlay_url),
     per_frame_probs: toNumberArray(readFirst(root, ['perFrameProbs', 'per_frame_probs']) ?? deepfake.per_frame_probs),
-    analysis_type: readString(readFirst(root, ['analysis_type'])),
+    analysis_type: readString(readFirst(root, ['analysis_type'])), engine_label: readString(readFirst(root, ['engine_label'])),
     original_face_url: readString(readFirst(root.raw || {}, ['original_face_url'])),
     rgb_contribution: readNumber(readFirst(root.raw || {}, ['rgb_contribution'])),
     freq_contribution: readNumber(readFirst(root.raw || {}, ['freq_contribution'])),
