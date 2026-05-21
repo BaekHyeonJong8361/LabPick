@@ -67,15 +67,14 @@ function makeTopoData(n = 120) {
 
 function makeTopoDataFromResult(result: AnalysisResult | null) {
   if (!result?.per_frame_probs?.length) return makeTopoData();
-  const threshold = (result.raw as any)?.threshold ?? 0.081;
+  const threshold = (result.raw as any)?.threshold ?? 0.11;
   return result.per_frame_probs.map((prob, index) => {
     let anomalyIndex = 0;
     if (prob >= threshold) {
         const ratio = Math.min(1, (prob - threshold) / (1 - threshold));
         anomalyIndex = 88.5 + (ratio * 11.4); 
     } else {
-        const ratio = Math.max(0, prob / threshold);
-        anomalyIndex = 12.4 + (ratio * 35.1);
+        const ratio = Math.max(0, prob / threshold); anomalyIndex = 12.4 + (ratio * 50.1);
     }
     const height = Math.max(5, Math.min(95, anomalyIndex));
     return { height, isAnomalous: prob >= threshold, timeLabel: (result.suspicious_frames[index] as any)?.time || (index * 1.0).toFixed(1) + "s" };
@@ -120,7 +119,7 @@ export default function ScanAnalysisPage() {
   const [view, setView] = useState<'loading' | 'results'>('loading');
   const [progress, setProgress] = useState(0);
   const [stepText, setStepText] = useState(STEPS[0]);
-  const {
+  const { submitVideoUrl,
     currentVideoId,
     targetLabel,
     status,
@@ -328,6 +327,16 @@ export default function ScanAnalysisPage() {
     }, 300);
   }
 
+  
+  const handleRerun = async (newModel: string) => {
+    if (!targetLabel) return;
+    const currentLabel = targetLabel;
+    resetAnalysis();
+    try {
+      await submitVideoUrl(currentLabel, newModel as any);
+    } catch (e) { console.error(e); }
+  };
+
   function resetAnalysis() {
     resetVideoAnalysis();
     setProgress(0);
@@ -528,6 +537,31 @@ export default function ScanAnalysisPage() {
               <p className={s.resultsSubtitle}>
                 {targetName} • {result?.engine_label || "Standard Engine"} • {result?.xai_heatmap_url ? "XAI forensic evidence available" : "Analyzed report"}
               </p>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, letterSpacing: '0.05em' }}>SWAP ENGINE:</span>
+              <div style={{ display: 'flex', background: 'rgba(0,0,0,0.05)', padding: '3px', borderRadius: '999px', border: '1px solid var(--border-light)' }}>
+                {['RYZE', 'LEE_SIN', 'SHEN', 'RAMMUS'].map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => handleRerun(m)}
+                    style={{
+                      padding: '5px 12px',
+                      fontSize: '0.65rem',
+                      borderRadius: '999px',
+                      border: 'none',
+                      background: result?.engine_label?.includes(m) ? 'var(--accent-blue)' : 'transparent',
+                      color: result?.engine_label?.includes(m) ? '#fff' : 'var(--text-main)',
+                      cursor: 'pointer',
+                      fontWeight: 700,
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
             </div>
             <button className={s.newAnalysisBtn} onClick={resetAnalysis}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
