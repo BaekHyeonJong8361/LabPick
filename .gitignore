@@ -2,3 +2,15 @@ node_modules/
 dist/
 .env*
 .DS_Store
+
+# 프로젝트 관련 파일들 제외
+*.py
+*.log
+*.out
+*.tar
+node_modules/
+__pycache__/
+saved_models/
+dfdc_raw/
+ff_data/
+datasets/
