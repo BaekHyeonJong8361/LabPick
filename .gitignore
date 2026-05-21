@@ -1,16 +1,18 @@
-node_modules/
-dist/
-.env*
-.DS_Store
-
-# 프로젝트 관련 파일들 제외
+# 파이썬 및 시스템 관련 파일 제외
 *.py
 *.log
 *.out
 *.tar
-node_modules/
+*.txt
+*.md
+*.sh
 __pycache__/
+node_modules/
 saved_models/
 dfdc_raw/
 ff_data/
 datasets/
+xai_results/
+xai_test/
+test_client/
+test_inputs/
